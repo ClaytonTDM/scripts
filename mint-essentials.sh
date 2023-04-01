@@ -37,12 +37,16 @@ sudo add-apt-repository ppa:obsproject/obs-studio -y;
 sudo apt update;
 sudo apt install ffmpeg obs-studio -y;
 
-# --- Qemu --- #
+# --- QEMU --- #
 sudo apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system -y;
 sudo systemctl enable --now libvirtd;
 sudo systemctl start libvirtd;
 sudo usermod -aG kvm $USER;
 sudo usermod -aG libvirt $USER;
+
+# --- Speedtest --- 
+curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash;
+sudo apt-get install speedtest -y;
 
 # --- Cleanup --- #
 sudo apt-get install -f;
