@@ -1,4 +1,5 @@
 #!/bin/bash
+
 sudo apt-get update;
 sudo apt-get upgrade -y;
 sudo dpkg --add-architecture i386;
