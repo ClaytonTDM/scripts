@@ -53,6 +53,6 @@ else
   sudo apt-get install steam -y;
 fi
 
-  # --- Cleanup --- #
-  sudo apt-get install -f;
-  sudo apt-get autoremove -y;
+# --- Cleanup --- #
+sudo apt-get install -f;
+sudo apt-get autoremove -y;
