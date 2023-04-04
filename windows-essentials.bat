@@ -1,3 +1,5 @@
+@echo off
+
 rem # --- Discord --- #
 winget install discord.discord --accept-package-agreements --accept-source-agreements
 
