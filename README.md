@@ -5,6 +5,6 @@ curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/mint-essentials.sh | ba
 
 ## Windows Essentials
 ```
-curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/windows-essentials.bat -o windows-essentials.bat
+curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/windows-essentials.bat -o windows-essentials.bat
 ./windows-essentials.bat
 ```
