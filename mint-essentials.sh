@@ -78,6 +78,6 @@ fi
 # --- Cleanup --- #
 sudo apt-get install -f;
 sudo apt-get autoremove -y;
-sudo rm -rf ./discord-0.0.17.deb
+sudo rm -rf ./discord-0.0.26.deb
 
-zenity --info --text="All programs supported on your system have been installed. Thank you for using Mint Essentials." --title="Mint Essentials"
+zenity --info --text="All programs supported by your system have been installed. Thank you for using Mint Essentials." --title="Mint Essentials"
