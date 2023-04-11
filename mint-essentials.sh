@@ -65,7 +65,7 @@ else
 
   # --- Discord --- #
   notify-send "Mint Essentials" "VSCodium has finished installing. Installing Discord..."
-  wget https://dl.discordapp.net/apps/linux/0.0.17/discord-0.0.17.deb
+  wget https://dl.discordapp.net/apps/linux/0.0.26/discord-0.0.26.deb
   sudo apt-get install ./discord-0.0.26.deb -y
 
   # --- Steam --- #
