@@ -36,7 +36,7 @@ sudo usermod -aG kvm $USER;
 sudo usermod -aG libvirt $USER;
 
 # --- Speedtest --- #
-notify-send "Mint Essentials" "QEMU has finished installing. Speedtest..."
+notify-send "Mint Essentials" "QEMU has finished installing. Installing Speedtest..."
 curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash;
 sudo apt-get install speedtest -y;
 
