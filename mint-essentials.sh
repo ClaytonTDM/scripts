@@ -1,5 +1,6 @@
 #!/bin/bash
 
+notify-send "Mint Essentials" "Thank you for choosing Mint Essentials. Preparing for installation..."
 sudo apt-get update;
 sudo apt-get upgrade -y;
 sudo dpkg --add-architecture i386;
@@ -46,7 +47,7 @@ sudo apt-get install git -y;
 
 # --- Spotify --- #
 notify-send "Mint Essentials" "Git has finished installing. Installing Spotify..."
-sudo apt install spotify-client -y
+sudo apt-get install spotify-client -y
 
 if [ -e /dev/.cros_milestone ]; then
   echo Chrome OS detected
@@ -64,7 +65,8 @@ else
 
   # --- Discord --- #
   notify-send "Mint Essentials" "VSCodium has finished installing. Installing Discord..."
-  sudo apt-get install discord -y;
+  wget https://dl.discordapp.net/apps/linux/0.0.17/discord-0.0.17.deb
+  sudo apt-get install ./discord-0.0.17.deb -y
 
   # --- Steam --- #
   notify-send "Mint Essentials" "Discord has finished installing. Installing Steam..."
@@ -76,5 +78,6 @@ fi
 # --- Cleanup --- #
 sudo apt-get install -f;
 sudo apt-get autoremove -y;
+sudo rm -rf ./discord-0.0.17.deb
 
 zenity --info --text="All programs supported on your system have been installed. Thank you for using Mint Essentials." --title="Mint Essentials"
