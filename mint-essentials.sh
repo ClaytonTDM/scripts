@@ -38,6 +38,9 @@ sudo apt-get install speedtest -y;
 # --- Git --- #
 sudo apt-get install git -y;
 
+# --- Spotify --- #
+sudo apt install spotify-client -y
+
 if [ -e /dev/.cros_milestone ]; then
   echo Chrome OS detected
 else
