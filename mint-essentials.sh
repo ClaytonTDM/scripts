@@ -49,10 +49,6 @@ sudo apt-get install git -y;
 notify-send "Mint Essentials" "Git has finished installing. Installing Spotify..."
 sudo apt-get install spotify-client -y
 
-if [ -e /dev/.cros_milestone ]; then
-  echo Chrome OS detected
-  notify-send "Mint Essentials" "Spotify has finished installing. Starting cleanup..."
-else
   # --- OBS Studio --- #
   notify-send "Mint Essentials" "Spotify has finished installing. Installing OBS Studio..."
   sudo add-apt-repository ppa:obsproject/obs-studio -y;
@@ -74,7 +70,6 @@ else
   sudo apt-get install steam -y;
   
   notify-send "Mint Essentials" "Steam has finished installing. Starting cleanup..."
-fi
 
 # --- Cleanup --- #
 sudo apt-get install -f;
