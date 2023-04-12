@@ -1,79 +1,92 @@
 #!/bin/bash
 
-notify-send "Mint Essentials" "Thank you for choosing Mint Essentials. Preparing for installation..."
-sudo apt-get update;
-sudo apt-get upgrade -y;
-sudo dpkg --add-architecture i386;
-sudo apt-get install curl;
-
-# --- Brave Browser --- #
-notify-send "Mint Essentials" "Installing Brave Browser..."
+sudo echo "sudo"
+(
+# =================================================================
+echo "# Installing Brave Browser..."
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg;
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list;
-sudo apt-get update;
-sudo apt-get install brave-browser -y;
+sudo apt-get update > /dev/null;
+sudo apt-get install brave-browser -y > /dev/null;
 
-# --- GrapeJuice --- #
-notify-send "Mint Essentials" "Brave Browser has finished installing. Installing GrapeJuice..."
-curl https://gitlab.com/brinkervii/grapejuice/-/raw/master/ci_scripts/signing_keys/public_key.gpg | sudo tee /usr/share/keyrings/grapejuice-archive-keyring.gpg;
+# =================================================================
+echo "8.33"
+echo "# Installing GrapeJuice..."
+curl -s https://gitlab.com/brinkervii/grapejuice/-/raw/master/ci_scripts/signing_keys/public_key.gpg | sudo tee /usr/share/keyrings/grapejuice-archive-keyring.gpg  > /dev/null;
 sudo tee /etc/apt/sources.list.d/grapejuice.list <<< 'deb [signed-by=/usr/share/keyrings/grapejuice-archive-keyring.gpg] https://brinkervii.gitlab.io/grapejuice/repositories/debian/ universal main';
-sudo apt-get update;
-sudo apt-get install grapejuice -y;
+sudo apt-get update > /dev/null;
+sudo apt-get install grapejuice -y > /dev/null;
 
-# --- Wine --- #
-notify-send "Mint Essentials" "GrapeJuice has finished installing. Installing Wine..."
-sudo mkdir -pm755 /etc/apt/keyrings;
-sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key;
-sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources;
-sudo apt-get update;
-sudo apt-get install --install-recommends winehq-stable -y;
+# =================================================================
+echo "16.67"
+echo "# Installing Wine..."
+sudo mkdir -pm755 /etc/apt/keyrings > /dev/null;
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key > /dev/null;
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources > /dev/null;
+sudo apt-get update > /dev/null;
+sudo apt-get install --install-recommends winehq-stable -y > /dev/null;
 
-# --- QEMU --- #
-notify-send "Mint Essentials" "Wine has finished installing. Installing QEMU..."
-sudo apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system -y;
-sudo systemctl enable --now libvirtd;
-sudo systemctl start libvirtd;
-sudo usermod -aG kvm $USER;
-sudo usermod -aG libvirt $USER;
+# =================================================================
+echo "25"
+echo "# Installing QEMU..."
+sudo apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system -y > /dev/null;
+sudo systemctl enable --now libvirtd > /dev/null;
+sudo systemctl start libvirtd > /dev/null;
+sudo usermod -aG kvm $USER > /dev/null;
+sudo usermod -aG libvirt $USER > /dev/null;
 
-# --- Speedtest --- #
-notify-send "Mint Essentials" "QEMU has finished installing. Installing Speedtest..."
-curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash;
-sudo apt-get install speedtest -y;
+# =================================================================
+echo "33.33"
+echo "# Installing Git..."
+sudo apt-get install git -y > /dev/null;
 
-# --- Git --- #
-notify-send "Mint Essentials" "Speedtest has finished installing. Installing Git..."
-sudo apt-get install git -y;
+# =================================================================
+echo "50"
+echo "# Installing Spotify..."
+sudo apt-get install spotify-client -y > /dev/null;
 
-# --- Spotify --- #
-notify-send "Mint Essentials" "Git has finished installing. Installing Spotify..."
-sudo apt-get install spotify-client -y
+# =================================================================
+echo "58.33"
+echo "# Installing OBS Studio..."
+sudo add-apt-repository ppa:obsproject/obs-studio -y > /dev/null;
+sudo apt update > /dev/null;
+sudo apt install ffmpeg obs-studio -y > /dev/null;
 
-  # --- OBS Studio --- #
-  notify-send "Mint Essentials" "Spotify has finished installing. Installing OBS Studio..."
-  sudo add-apt-repository ppa:obsproject/obs-studio -y;
-  sudo apt update;
-  sudo apt install ffmpeg obs-studio -y;
+# =================================================================
+echo "66.67"
+echo "# Installing VSCodium..."
+wget https://github.com/VSCodium/vscodium/releases/download/1.77.2.23101/codium_1.77.2.23101_amd64.deb > /dev/null;
+sudo apt-get install ./codium_1.77.2.23101_amd64.deb -y > /dev/null;
 
-  # --- VSCodium --- #
-  notify-send "Mint Essentials" "OBS Studio has finished installing. Installing VSCodium..."
-  wget https://github.com/VSCodium/vscodium/releases/download/1.77.2.23101/codium_1.77.2.23101_amd64.deb
-  sudo apt-get install ./codium_1.77.2.23101_amd64.deb -y;
+# =================================================================
+echo "75"
+echo "# Installing Discord..."
+wget https://dl.discordapp.net/apps/linux/0.0.26/discord-0.0.26.deb > /dev/null;
+sudo apt-get install ./discord-0.0.26.deb -y > /dev/null;
 
-  # --- Discord --- #
-  notify-send "Mint Essentials" "VSCodium has finished installing. Installing Discord..."
-  wget https://dl.discordapp.net/apps/linux/0.0.26/discord-0.0.26.deb
-  sudo apt-get install ./discord-0.0.26.deb -y
+# =================================================================
+echo "83.33"
+echo "# Installing Steam..."
+sudo apt-get install steam -y > /dev/null;
 
-  # --- Steam --- #
-  notify-send "Mint Essentials" "Discord has finished installing. Installing Steam..."
-  sudo apt-get install steam -y;
-  
-  notify-send "Mint Essentials" "Steam has finished installing. Starting cleanup..."
+# =================================================================
+echo "91.67"
+echo "# Cleaning Up..."
+sudo apt-get install -f > /dev/null;
+sudo apt-get autoremove -y > /dev/null;
+sudo rm -rf ./discord-0.0.26.deb > /dev/null;
 
-# --- Cleanup --- #
-sudo apt-get install -f;
-sudo apt-get autoremove -y;
-sudo rm -rf ./discord-0.0.26.deb
+# =================================================================
+echo "100"
 
+
+) |
+zenity --progress \
+  --title="Mint Essentials" \
+  --text="Preparing..." \
+  --percentage=0 \
+  --auto-close \
+  --auto-kill
+
+(( $? != 0 )) && zenity --error --text="An error has occurred."
 zenity --info --text="All programs supported by your system have been installed. Thank you for using Mint Essentials." --title="Mint Essentials"
