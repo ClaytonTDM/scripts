@@ -61,7 +61,8 @@ else
 
   # --- VSCodium --- #
   notify-send "Mint Essentials" "OBS Studio has finished installing. Installing VSCodium..."
-  sudo apt-get install codium -y;
+  wget https://github.com/VSCodium/vscodium/releases/download/1.77.2.23101/codium_1.77.2.23101_amd64.deb
+  sudo apt-get install ./codium_1.77.2.23101_amd64.deb -y;
 
   # --- Discord --- #
   notify-send "Mint Essentials" "VSCodium has finished installing. Installing Discord..."
