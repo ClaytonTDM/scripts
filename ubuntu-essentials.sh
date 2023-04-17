@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt install zenity
+sudo apt install zenity -y
 (
 # =================================================================
 echo "# Installing Brave Browser..."
