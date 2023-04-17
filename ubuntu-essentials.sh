@@ -25,6 +25,7 @@ sudo mkdir -pm755 /etc/apt/keyrings > /dev/null;
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key > /dev/null;
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources > /dev/null;
 sudo apt-get update > /dev/null;
+sudo apt-get install -f
 sudo apt-get install --install-recommends winehq-stable -y > /dev/null;
 
 # =================================================================
@@ -91,4 +92,4 @@ zenity --progress \
   --auto-kill
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
-zenity --info --text="All programs supported by your system have been installed. Thank you for using Linux Essentials." --title="Ubuntu Essentials"
+zenity --info --text="All programs supported by your system have been installed. Thank you for using Linux Essentials." --title="Ubuntu Essentials" --no-cancel --pulsate
