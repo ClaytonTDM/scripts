@@ -83,7 +83,7 @@ sudo rm -rf ./codium.deb > /dev/null;
 echo "100"
 ) |
 zenity --progress \
-  --title="Linux Essentials" \
+  --title="Ubuntu Essentials" \
   --text="Preparing..." \
   --percentage=0 \
   --auto-close \
