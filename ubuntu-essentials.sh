@@ -90,4 +90,4 @@ zenity --progress \
   --auto-kill
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
-zenity --info --text="All programs supported by your system have been installed. Thank you for using Linux Essentials." --title="Mint Essentials"
+zenity --info --text="All programs supported by your system have been installed. Thank you for using Linux Essentials." --title="Ubuntu Essentials"
