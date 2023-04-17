@@ -1,6 +1,6 @@
-## Linux Essentials
-```
-curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/linux-essentials.sh | bash
+## Ubuntu Essentials
+```sh
+curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/ubuntu-essentials.sh | bash
 ```
 
 ## Windows Essentials
