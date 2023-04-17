@@ -1,6 +1,6 @@
-## Mint Essentials
+## Linux Essentials
 ```
-curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/mint-essentials.sh | bash
+curl https://cdn.jsdelivr.net/gh/ClaytonTDM/scripts@main/linux-essentials.sh | bash
 ```
 
 ## Windows Essentials
