@@ -76,6 +76,7 @@ echo "75"
 echo "# Installing Steam..."
 wget https://cdn.akamai.steamstatic.com/client/installer/steam.deb > /dev/null;
 sudo apt-get update > /dev/null;
+sudo apt-get install libc6-i386;
 sudo apt-get install ./steam.deb -y > /dev/null;
 
 # =================================================================
