@@ -1,9 +1,12 @@
 #!/bin/bash
-
-cd ~
-sudo apt install zenity -y
-sudo apt install -f
+clear
+echo Loading...
+sudo apt-get install zenity -y > /dev/null;
+ans=$(zenity --list --text="This script is licensed under the Eclipse Public License 2.0.\n\nThis script is provided as-is without any warranty\nor guarantee of any kind, whether express or implied.\nThe user assumes all risks associated with the use of this script.\n\nThe developer of this script shall not be liable for any damages\nor losses of any kind arising from the use or inability to use this\nscript, including but not limited to direct, indirect, incidental,\npunitive, and consequential damages." --radiolist --column=" " --column=" " --title="Ubuntu Essentials - Agreement" TRUE Agree FALSE Disagree);
+if [ "$ans" == "Agree" ]; then
 (
+cd ~/
+sleep 0.1
 # =================================================================
 echo "# Installing Brave Browser..."
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg;
@@ -25,8 +28,9 @@ echo "# Installing Wine..."
 sudo mkdir -pm755 /etc/apt/keyrings > /dev/null;
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key > /dev/null;
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources > /dev/null;
+sudo apt-get autoremove > /dev/null;
+sudo apt-get install -f;
 sudo apt-get update > /dev/null;
-sudo apt-get install -f
 sudo apt-get install --install-recommends winehq-stable -y > /dev/null;
 
 # =================================================================
@@ -80,16 +84,17 @@ echo "# Installing VSCodium..."
 curl -s https://api.github.com/repos/VSCodium/vscodium/releases/latest -o codium.deb | jq '.assets[] | select(.name|match("amd64.deb$")) | .browser_download_url'
 sudo apt-get update > /dev/null;
 sudo apt-get install ./codium.deb -y > /dev/null;
-echo "91.67"
 
 # =================================================================
-echo "93.67"
+echo "91.67"
 echo "# Cleaning Up..."
+sudo rm -rf ./discord-0.0.26.deb;
+sudo rm -rf ./codium.deb;
+sudo rm -rf ./steam.deb;
+echo "93.67"
+echo "# Almost Done..."
 sudo apt-get install -f > /dev/null;
 sudo apt-get autoremove -y > /dev/null;
-sudo rm -rf ./discord-0.0.26.deb > /dev/null;
-sudo rm -rf ./codium.deb > /dev/null;
-sudo rm -rf ./steam.deb > /dev/null;
 
 # =================================================================
 
@@ -99,3 +104,4 @@ zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
 zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials"
+fi
