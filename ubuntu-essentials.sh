@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ~
 sudo apt install zenity -y
 sudo apt install -f
 (
