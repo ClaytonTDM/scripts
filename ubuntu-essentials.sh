@@ -90,12 +90,7 @@ sudo rm -rf ./codium.deb > /dev/null;
 
 echo "100"
 ) |
-zenity --progress \
-  --title="Ubuntu Essentials" \
-  --text="Preparing..." \
-  --percentage=0 \
-  --auto-close \
-  --auto-kill
+zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage=0 --auto-close --auto-kill
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
 zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials" --no-cancel --pulsate
