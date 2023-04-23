@@ -31,6 +31,7 @@ sudo apt-get install --install-recommends winehq-stable -y > /dev/null;
 # =================================================================
 echo "25"
 echo "# Installing QEMU..."
+sudo apt-get update > /dev/null;
 sudo apt install qemu-kvm virt-manager virtinst libvirt-clients bridge-utils libvirt-daemon-system -y > /dev/null;
 sudo systemctl enable --now libvirtd > /dev/null;
 sudo systemctl start libvirtd > /dev/null;
@@ -40,11 +41,13 @@ sudo usermod -aG libvirt $USER > /dev/null;
 # =================================================================
 echo "33.33"
 echo "# Installing Git..."
+sudo apt-get update > /dev/null;
 sudo apt-get install git -y > /dev/null;
 
 # =================================================================
 echo "50"
 echo "# Installing Spotify..."
+sudo apt-get update > /dev/null;
 sudo apt-get install spotify-client -y > /dev/null;
 
 # =================================================================
@@ -58,17 +61,20 @@ sudo apt install ffmpeg obs-studio -y > /dev/null;
 echo "66.7"
 echo "# Installing Discord..."
 wget https://dl.discordapp.net/apps/linux/0.0.26/discord-0.0.26.deb > /dev/null;
+sudo apt-get update > /dev/null;
 sudo apt-get install ./discord-0.0.26.deb -y > /dev/null;
 
 # =================================================================
 echo "75"
 echo "# Installing Steam..."
+sudo apt-get update > /dev/null;
 sudo apt-get install steam -y > /dev/null;
 
 # =================================================================
 echo "83.33"
 echo "# Installing VSCodium..."
 curl -s https://api.github.com/repos/VSCodium/vscodium/releases/latest -o codium.deb | jq '.assets[] | select(.name|match("amd64.deb$")) | .browser_download_url'
+sudo apt-get update > /dev/null;
 sudo apt-get install ./codium.deb -y > /dev/null;
 echo "91.67"
 
@@ -92,4 +98,4 @@ zenity --progress \
   --auto-kill
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
-zenity --info --text="All programs supported by your system have been installed. Thank you for using Linux Essentials." --title="Ubuntu Essentials" --no-cancel --pulsate
+zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials" --no-cancel --pulsate
