@@ -2,7 +2,7 @@
 clear
 echo Loading...
 sudo apt-get install zenity -y > /dev/null;
-ans=$(zenity --list --text="This script is licensed under the Eclipse Public License 2.0.\n\nThis script is provided as-is without any warranty\nor guarantee of any kind, whether express or implied.\nThe user assumes all risks associated with the use of this script.\n\nThe developer of this script shall not be liable for any damages\nor losses of any kind arising from the use or inability to use this\nscript, including but not limited to direct, indirect, incidental,\npunitive, and consequential damages." --radiolist --column=" " --column=" " --title="Ubuntu Essentials - Agreement" TRUE Agree FALSE Disagree);
+ans=$(zenity --list --text="This script is licensed under the Eclipse Public License 2.0.\n\nThis script is provided as-is without any warranty\nor guarantee of any kind, whether express or implied.\nThe user assumes all risks associated with the use of this script.\n\nThe developer of this script shall not be liable for any damages\nor losses of any kind arising from the use or inability to use this\nscript, including but not limited to direct, indirect, incidental,\npunitive, and consequential damages." --radiolist --column="" --column="" --title="Ubuntu Essentials - Agreement" TRUE Agree FALSE Disagree);
 if [ "$ans" == "Agree" ]; then
 (
 cd ~/
