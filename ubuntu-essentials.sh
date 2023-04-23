@@ -69,8 +69,9 @@ sudo apt-get install ./discord-0.0.26.deb -y > /dev/null;
 # =================================================================
 echo "75"
 echo "# Installing Steam..."
+wget https://cdn.akamai.steamstatic.com/client/installer/steam.deb > /dev/null;
 sudo apt-get update > /dev/null;
-sudo apt-get install steam -y > /dev/null;
+sudo apt-get install ./steam.deb -y > /dev/null;
 
 # =================================================================
 echo "83.33"
@@ -87,12 +88,13 @@ sudo apt-get install -f > /dev/null;
 sudo apt-get autoremove -y > /dev/null;
 sudo rm -rf ./discord-0.0.26.deb > /dev/null;
 sudo rm -rf ./codium.deb > /dev/null;
+sudo rm -rf ./steam.deb > /dev/null;
 
 # =================================================================
 
 echo "100"
 ) |
-zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage=0 --auto-close --auto-kill
+zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage=0 --auto-close --auto-kill --pulsate --no-cancel
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
-zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials" --no-cancel --pulsate
+zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials"
