@@ -94,7 +94,7 @@ sudo rm -rf ./steam.deb > /dev/null;
 
 echo "100"
 ) |
-zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage=0 --auto-close --auto-kill --pulsate --no-cancel
+zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --percentage=0 --auto-close --auto-kill --no-cancel
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
 zenity --info --text="All programs supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials"
