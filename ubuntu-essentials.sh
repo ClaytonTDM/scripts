@@ -12,6 +12,8 @@ function askPassword {
   fi
 }
 askPassword
+sudo apt-get install xdotool -y > /dev/null
+xdotool windowminimize $(xdotool getactivewindow)
 (
 cd ~/
 rm -rf ~/*.deb.* && rm -rf ~/*.deb
