@@ -5,7 +5,7 @@ if [ "$ans" == "Agree" ]; then
 (
 function askPassword {
   if [ $(sudo -n uptime 2>&1 | grep "load" | wc -l) != "1" ]; then
-    echo $(zenity --password --title="Enter superuser password") | sudo -S echo authenticated > /dev/null
+    echo $(zenity --password --title="Enter superuser password") | sudo -S echo authenticated > /dev/null && echo
   fi
   if [ $(sudo -n uptime 2>&1 | grep "load" | wc -l) != "1" ]; then
     zenity --error --text="Incorrect or no password provided"
@@ -98,9 +98,12 @@ sudo apt-get install ./codium.deb -y > /dev/null;
 # =================================================================
 
 echo "# Cleaning Up..."
-sudo rm -rf ./discord-0.0.26.deb;
+sudo rm -rf ./discord-*.deb;
 sudo rm -rf ./codium.deb;
 sudo rm -rf ./steam.deb;
+sudo rm -rf ./discord-*.deb.*;
+sudo rm -rf ./codium.deb.*;
+sudo rm -rf ./steam.deb.*;
 sudo apt-get install -f > /dev/null;
 sudo apt-get autoremove -y > /dev/null;
 
