@@ -113,4 +113,5 @@ zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --pulsate --
 (( $? != 0 )) && zenity --error --text="An error has occurred."
 notify-send "Ubuntu Essentials" "All applications supported by your system have been installed."
 zenity --info --text="All applications supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials"
+clear
 fi
