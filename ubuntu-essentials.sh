@@ -1,12 +1,23 @@
 #!/bin/bash
 clear
-echo Loading...
-sudo apt-get install zenity -y > /dev/null;
 ans=$(zenity --list --text="This script is licensed under the Eclipse Public License 2.0.\n\nThis script is provided as-is without any warranty\nor guarantee of any kind, whether express or implied.\nThe user assumes all risks associated with the use of this script.\n\nThe developer of this script shall not be liable for any damages\nor losses of any kind arising from the use or inability to use this\nscript, including but not limited to direct, indirect, incidental,\npunitive, and consequential damages." --radiolist --column="" --column="" --title="Ubuntu Essentials - Agreement" TRUE Agree FALSE Disagree);
 if [ "$ans" == "Agree" ]; then
 (
+function askPassword {
+  if [ $(sudo -n uptime 2>&1 | grep "load" | wc -l) == "1" ]; then
+    echo has sudo
+    else
+    echo $(zenity --password --title="Enter sudo password") | sudo -S echo sudo authenticated
+  fi
+
+  if [ $(sudo -n uptime 2>&1 | grep "load" | wc -l) != "1" ]; then
+    zenity --error --text="Incorrect or no password provided"
+    askPassword
+  fi
+}
+askPassword
+clear
 cd ~/
-sleep 0.1
 # =================================================================
 echo "# Installing Brave Browser..."
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg;
