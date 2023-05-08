@@ -2,7 +2,6 @@
 clear
 ans=$(zenity --list --text="This tool is licensed under the Eclipse Public License 2.0.\n\nThis tool is provided as-is without any warranty\nor guarantee of any kind, whether express or implied.\nThe user assumes all risks associated with the use of this tool.\n\nThe developer of this tool shall not be liable for any damages\nor losses of any kind arising from the use or inability to use this\ntool, including but not limited to direct, indirect, incidental,\npunitive, and consequential damages." --radiolist --column="" --column="" --title="Ubuntu Essentials - Agreement" TRUE Agree FALSE Disagree);
 if [ "$ans" == "Agree" ]; then
-(
 function askPassword {
   if [ $(sudo -n uptime 2>&1 | grep "load" | wc -l) != "1" ]; then
     echo $(zenity --password --title="Enter superuser password") | sudo -S echo authenticated > /dev/null && echo
@@ -13,6 +12,7 @@ function askPassword {
   fi
 }
 askPassword
+(
 cd ~/
 rm -rf ~/*.deb.* && rm -rf ~/*.deb
 # =================================================================
@@ -115,6 +115,8 @@ zenity --progress --title="Ubuntu Essentials" --text="Preparing..." --pulsate --
 
 (( $? != 0 )) && zenity --error --text="An error has occurred."
 notify-send "Ubuntu Essentials" "All applications supported by your system have been installed."
-zenity --info --text="All applications supported by your system have been installed. Thank you for using Ubuntu Essentials." --title="Ubuntu Essentials"
-clear
+zenity --info --text="All applications supported by your system have been installed. This tool will now exit." --title="Ubuntu Essentials"
+exit
+else
+exit
 fi
