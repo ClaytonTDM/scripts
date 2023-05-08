@@ -1,5 +1,5 @@
 ## Ubuntu Essentials
-Most of the apps I and many others use daily, now in a convenient bash script.
+Most of the apps me and many others use daily, now in a convenient bash script.
 ```sh
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/ubuntu-essentials.sh | bash
 ```
