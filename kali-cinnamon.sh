@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo rm -rf /etc/apt/sources.list.d/kalicinnamon.list
 sudo bash -c "echo deb [trusted=yes] http://packages.linuxmint.com cindy main > /etc/apt/sources.list.d/kalicinnamon.list"
 sudo apt update
