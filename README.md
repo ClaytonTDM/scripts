@@ -2,11 +2,13 @@
 Very simple script to install the Cinnamon desktop environment on Kali Linux, along with the default cursors, icons, & themes.
 ```bash
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/kali-cinnamon.sh | bash
+ 
 ```
 ## Ubuntu Essentials
 Most of the apps me and many others use daily, now in a convenient bash script.
 ```bash
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/ubuntu-essentials.sh | bash
+ 
 ```
 
 ## Windows Essentials
