@@ -14,4 +14,5 @@ Same as Ubuntu Essentials, but for Windows 10 (1809+) and Windows 11.
 ```cmd
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/windows-essentials.bat -o windows-essentials.bat
 windows-essentials.bat
+ 
 ```
