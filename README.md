@@ -17,5 +17,6 @@ To execute this, copy the command, then paste it in `cmd.exe`.
 ```cmd
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/windows-essentials.bat -o windows-essentials.bat
 windows-essentials.bat
+del windows-essentials.bat
  
 ```
