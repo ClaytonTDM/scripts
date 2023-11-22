@@ -92,10 +92,10 @@ sudo apt-get install ./steam.deb -y > /dev/null;
 
 # =================================================================
 
-echo "# Installing VSCodium...\n10/10"
-curl -s https://api.github.com/repos/VSCodium/vscodium/releases/latest -o codium.deb | jq '.assets[] | select(.name|match("amd64.deb$")) | .browser_download_url'
-sudo apt-get update > /dev/null;
-sudo apt-get install ./codium.deb -y > /dev/null;
+# echo "# Installing VSCodium...\n10/10"
+# curl -s https://api.github.com/repos/VSCodium/vscodium/releases/latest -o codium.deb | jq '.assets[] | select(.name|match("amd64.deb$")) | .browser_download_url'
+# sudo apt-get update > /dev/null;
+# sudo apt-get install ./codium.deb -y > /dev/null;
 
 # =================================================================
 
@@ -104,7 +104,7 @@ sudo rm -rf ./discord-*.deb;
 sudo rm -rf ./codium.deb;
 sudo rm -rf ./steam.deb;
 sudo rm -rf ./discord-*.deb.*;
-sudo rm -rf ./codium.deb.*;
+# sudo rm -rf ./codium.deb.*;
 sudo rm -rf ./steam.deb.*;
 sudo apt-get install -f > /dev/null;
 sudo apt-get autoremove -y > /dev/null;
