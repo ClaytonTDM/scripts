@@ -4,7 +4,7 @@ echo "This script will install some apps and tools that I use on my system."
 echo ""
 echo "Keep an eye on the terminal - you may need to enter your password or choose some options."
 echo "If asked what shell to use, choose zsh."
-echo "If asked to add a repo, choose yes."
+echo "If asked to add a repository, choose yes."
 echo ""
 echo "Press any key to continue..."
 read -n 1 -s key
