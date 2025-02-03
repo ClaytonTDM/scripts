@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 echo "This script will install some apps and tools that I use on my system."
 echo ""
 echo "Keep an eye on the terminal - you may need to enter your password or choose some options."
