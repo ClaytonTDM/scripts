@@ -18,6 +18,16 @@ curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan.sh -o as
 
 Last tested on Linux Mint 22.1 Cinnamon
 
+## asus_fan_uninstall.sh
+
+Uninstalls the above script.
+
+```sh
+curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan_uninstall.sh -o asus_fan_uninstall.sh && sudo bash ./asus_fan_uninstall.sh && rm -rf ./asus_fan_uninstall.sh
+```
+
+Last tested on Linux Mint 22.1 Cinnamon
+
 ---
 
 > [!WARNING]
