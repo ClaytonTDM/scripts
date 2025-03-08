@@ -10,7 +10,7 @@ Last tested on Linux Mint 22.1 Cinnamon
 
 ## asus_fan.sh
 
-**Only intended for ASUS laptops with `asus_wmi` firmware.** Installs a script to send a notification every time the fan boost mode is changed.
+**Only intended for ASUS laptops with `asus_wmi` firmware.** Installs a script to send a notification every time the fan boost mode is changed (often using an FN key combo).
 
 ```sh
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan.sh -o asus_fan.sh && sudo bash ./asus_fan.sh && rm -rf ./asus_fan.sh
