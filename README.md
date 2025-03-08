@@ -39,9 +39,12 @@ Last tested on Linux Mint 22.1 Cinnamon
   ## Kali Cinnamon
 
   Very simple script to install the Cinnamon desktop environment on Kali Linux, along with the default cursors, icons, & themes.
+  
   ```sh
   curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/kali-cinnamon.sh | bash
   ```
+
+  Last tested on Kali Linux 2023.4
 
   ## Ubuntu Essentials
 
@@ -50,6 +53,8 @@ Last tested on Linux Mint 22.1 Cinnamon
   ```sh
   curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/ubuntu-essentials.sh | bash
   ```
+
+  Last tested on Linux Mint 21.1 Cinnamon
 
   ## Windows Essentials
 
@@ -62,5 +67,7 @@ Last tested on Linux Mint 22.1 Cinnamon
   windows-essentials.bat
   del windows-essentials.bat
   ```
+
+  Last tested on Windows 11 22H2
 
 </details>
