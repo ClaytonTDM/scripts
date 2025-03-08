@@ -166,7 +166,12 @@ rm vscode.deb
 mkdir ~/.config/ghostty
 touch ~/.config/ghostty/config
 echo 'theme = "Brogrammer"
-font-family = "Cascadia Code NF"' >~/.config/ghostty/config
+font-family = "Cascadia Code NF"
+background-opacity = 0.9
+background-blur = true
+background = "#0f0f0f"
+window-width = 91
+window-height = 31' >~/.config/ghostty/config
 UBUNTU_VERSION=$(inxi -Sx | awk -F'Ubuntu ' '{print $2}' | awk '{print $1}' | tr -d '\n')
 #source /etc/os-release
 ARCH=$(dpkg --print-architecture)
