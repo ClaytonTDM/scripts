@@ -150,7 +150,7 @@ curl -fsSL https://bun.sh/install | bash
 # now graphical stuff
 
 # deb packages
-sudo apt-get install -y diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-snapshot gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1
+sudo apt-get install -y diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-snapshot gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng
 # flatpaks
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
@@ -211,6 +211,18 @@ cd Colloid-gtk-theme
 sudo chmod +x install.sh
 ./install.sh -t pink -c dark --tweaks black rimless -l
 
+# generate icons
+cd ~/Desktop/DEV
+git clone https://github.com/linuxmint/mint-y-icons.git
+cd mint-y-icons/usr/share/folder-color-switcher/colors.d
+curl https://raw.githubusercontent.com/ClaytonTDM/scripts/refs/heads/main/assets/Mint-Y.json -o Mint-Y.json
+cd ~/Desktop/DEV/mint-y-icons/src/places
+curl https://raw.githubusercontent.com/ClaytonTDM/scripts/refs/heads/main/assets/generate-color-variations.py -o generate-color-variations.py
+./generate-color-variations.py
+./render_places.py Colloid-Pink
+cd ~/Desktop/DEV/mint-y-icons/usr
+sudo cp -rf ./share/* /usr/share/
+
 # update system again
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -228,7 +240,7 @@ gsettings set org.cinnamon.desktop.wm.preferences titlebar-font 'Inter Medium 10
 # set gtk theme
 gsettings set org.cinnamon.desktop.interface gtk-theme 'Colloid-Pink-Dark'
 # set icon theme
-gsettings set org.cinnamon.desktop.interface icon-theme 'Mint-Y-Pink'
+gsettings set org.cinnamon.desktop.interface icon-theme 'Mint-Y-Colloid-Pink'
 # set mouse pointer
 gsettings set org.cinnamon.desktop.interface cursor-theme 'Bibata-Modern-Classic'
 # set cinnamon theme
@@ -290,4 +302,5 @@ zenity --list \
 "Inter Font" \
 "Cascadia Code Font" \
 "Colloid Pink Dark GTK Theme" \
-"Colloid Pink Dark Cinnamon Theme"
+"Colloid Pink Dark Cinnamon Theme" \
+"Colloid Pink Mint Y Icon Theme"
