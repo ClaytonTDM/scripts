@@ -183,6 +183,7 @@ GHOSTTY_DEB_FILE=$(basename "$GHOSTTY_DEB_URL")
 curl -LO "$GHOSTTY_DEB_URL"
 sudo dpkg -i "$GHOSTTY_DEB_FILE"
 rm "$GHOSTTY_DEB_FILE"
+sudo apt install --fix-broken -y
 # vesktop
 curl -L -o vesktop.deb "https://github.com/Vencord/Vesktop/releases/download/v1.5.4/vesktop_1.5.4_amd64.deb"
 sudo apt-get install ./vesktop.deb -y
