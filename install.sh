@@ -150,11 +150,11 @@ curl -fsSL https://bun.sh/install | bash
 # now graphical stuff
 
 # deb packages
-sudo apt-get install -y diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-snapshot gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng
+sudo apt-get install -y diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-snapshot gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng fsearch
 # flatpaks
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
-flatpak install --user -y flathub com.usebottles.bottles com.github.tchx84.Flatseal io.github.cboxdoerfer.FSearch org.prismlauncher.PrismLauncher com.vysp3r.ProtonPlus org.vinegarhq.Vinegar so.libdb.dissent app.zen_browser.zen com.github.neithern.g4music
+flatpak install --user -y flathub com.usebottles.bottles com.github.tchx84.Flatseal org.prismlauncher.PrismLauncher com.vysp3r.ProtonPlus org.vinegarhq.Vinegar so.libdb.dissent com.github.neithern.g4music
 # manual installs
 # brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -187,6 +187,8 @@ rm "$GHOSTTY_DEB_FILE"
 curl -L -o vesktop.deb "https://github.com/Vencord/Vesktop/releases/download/v1.5.4/vesktop_1.5.4_amd64.deb"
 sudo apt-get install ./vesktop.deb -y
 rm vesktop.deb
+# zen browser
+bash <(curl -s https://updates.zen-browser.app/install.sh)
 
 # install fonts
 cd ~/
