@@ -150,7 +150,7 @@ curl -fsSL https://bun.sh/install | bash
 # now graphical stuff
 
 # deb packages
-sudo apt-get install -y -m diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng fsearch
+sudo apt-get install -y -m diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng fsearch zoxide
 # flatpaks
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
@@ -301,6 +301,8 @@ zenity --list \
 "Brave Browser" \
 "Ghostty" \
 "Vesktop" \
+"Zoxide" \
+"Inkscape" \
 "Inter Font" \
 "Cascadia Code Font" \
 "Colloid Pink Dark GTK Theme" \
