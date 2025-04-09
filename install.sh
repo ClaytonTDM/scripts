@@ -150,11 +150,11 @@ curl -fsSL https://bun.sh/install | bash
 # now graphical stuff
 
 # deb packages
-sudo apt-get install -y -m diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng fsearch zoxide power-profiles-daemon
+sudo apt-get install -y -m diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng zoxide power-profiles-daemon
 # flatpaks
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y https://sober.vinegarhq.org/sober.flatpakref
-flatpak install --user -y flathub com.usebottles.bottles com.github.tchx84.Flatseal org.prismlauncher.PrismLauncher com.vysp3r.ProtonPlus org.vinegarhq.Vinegar so.libdb.dissent com.github.neithern.g4music
+flatpak install --user -y flathub com.usebottles.bottles com.github.tchx84.Flatseal org.prismlauncher.PrismLauncher com.vysp3r.ProtonPlus org.vinegarhq.Vinegar so.libdb.dissent com.github.neithern.g4music io.github.cboxdoerfer.FSearch
 # manual installs
 # brave
 curl -fsS https://dl.brave.com/install.sh | sh
