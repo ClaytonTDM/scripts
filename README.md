@@ -6,7 +6,7 @@ Installs the tools and customizations I use daily. Intended for a fresh Linux Mi
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/install.sh -o install.sh && sudo chmod +x ./install.sh && ./install.sh && sudo rm -rf ./install.sh
 ```
 
-Last tested on Linux Mint 22.1 Cinnamon
+Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
 
 ## asus_fan.sh
 
@@ -16,7 +16,7 @@ Last tested on Linux Mint 22.1 Cinnamon
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan.sh -o asus_fan.sh && sudo bash ./asus_fan.sh && rm -rf ./asus_fan.sh
 ```
 
-Last tested on Linux Mint 22.1 Cinnamon
+Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
 
 ## asus_fan_uninstall.sh
 
@@ -26,7 +26,7 @@ Uninstalls the above script.
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan_uninstall.sh -o asus_fan_uninstall.sh && sudo bash ./asus_fan_uninstall.sh && rm -rf ./asus_fan_uninstall.sh
 ```
 
-Last tested on Linux Mint 22.1 Cinnamon
+Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
 
 ---
 
