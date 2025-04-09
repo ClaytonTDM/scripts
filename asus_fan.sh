@@ -15,13 +15,13 @@ Notify.init("ASUS Fan Monitor")
 def send_notification(mode):
     mode = int(mode)
 
-    if mode == 0:
+    if mode == 2:
         message = "Power Saver"
         icon = "power-profile-power-saver-symbolic"
-    elif mode == 1:
+    elif mode == 0:
         message = "Balanced"
         icon = "power-profile-balanced-symbolic"
-    elif mode == 2:
+    elif mode == 1:
         message = "Performance"
         icon = "power-profile-performance-symbolic"
     else:
