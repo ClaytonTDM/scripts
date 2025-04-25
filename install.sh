@@ -138,10 +138,11 @@ chsh -s $(which zsh)
 export PATH=$PATH:/home/clay/.local/bin
 
 # node
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
 nvm install 22
 # pnpm
-curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=10.0.0 sh -
+corepack enable pnpm
 # deno
 curl -fsSL https://deno.land/install.sh | sh
 # bun
