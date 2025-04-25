@@ -153,6 +153,7 @@ curl -fsSL https://bun.sh/install | bash
 sudo apt-get install -y -m diodon audacity wine winetricks protontricks lutris steam retroarch flameshot gimp gnome-clocks dconf-editor ibus obs-studio vlc vlc-plugin-fluidsynth libonig5 libsass1 inkscape optipng zoxide power-profiles-daemon gh htop yad
 # flatpaks
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak update -y
 flatpak install --user -y flathub com.usebottles.bottles com.github.tchx84.Flatseal org.prismlauncher.PrismLauncher com.vysp3r.ProtonPlus org.vinegarhq.Vinegar so.libdb.dissent com.github.neithern.g4music io.github.cboxdoerfer.FSearch org.vinegarhq.Sober
 # manual installs
 # brave
