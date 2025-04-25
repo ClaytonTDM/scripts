@@ -3,7 +3,7 @@
 Installs the tools and customizations I use daily. Intended for a fresh Linux Mint install running Cinnamon.
 
 ```sh
-curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/install.sh -o install.sh && sudo chmod +x ./install.sh && ./install.sh && sudo rm -rf ./install.sh
+curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/install.sh -o install.sh && sudo chmod +x ./install.sh && ./install.sh
 ```
 
 Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
