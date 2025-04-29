@@ -94,52 +94,8 @@ get_mapped_profile() {
     grep "^${mode}=" "$MAP_FILE" | cut -d'=' -f2
 }
 
-get_user_session() {
-    local display_user=$(who | grep -E '\(:[0-9.]+\)' | head -n 1 | awk '{print $1}')
-    local session_pid=""
-    local dbus_address=""
-
-    if [ -z "$display_user" ]; then
-        local session_info=$(loginctl list-sessions --no-legend | grep ' active=yes.* type=\(x11\|wayland\)' | head -n 1)
-        if [ -n "$session_info" ]; then
-            local session_id=$(echo "$session_info" | awk '{print $1}')
-            display_user=$(echo "$session_info" | awk '{print $3}')
-            session_pid=$(loginctl show-session "$session_id" -p Leader | cut -d= -f2)
-        fi
-    fi
-
-    if [ -n "$display_user" ]; then
-        local user_id=$(id -u "$display_user")
-        if [ -z "$session_pid" ]; then
-             session_pid=$(pgrep -u "$user_id" -n "(gnome-session|plasma_session|xfce4-session|cinnamon-session|startlxqt|mate-session)")
-        fi
-
-        if [ -n "$session_pid" ]; then
-             dbus_address=$(grep -z DBUS_SESSION_BUS_ADDRESS "/proc/$session_pid/environ" 2>/dev/null | cut -d= -f2-)
-        fi
-
-        if [ -n "$dbus_address" ]; then
-             echo "$display_user $dbus_address"
-             return 0
-        fi
-    fi
-    echo ""
-    return 1
-}
-
-run_notify() {
-    local profile_name="$1"
-    local user_session_info=$(get_user_session)
-
-    if [ -n "$user_session_info" ]; then
-        read -r current_user dbus_address <<< "$user_session_info"
-        sudo -u "$current_user" DBUS_SESSION_BUS_ADDRESS="$dbus_address" /usr/local/bin/asus_fan_notify.py "$profile_name" &>/dev/null &
-    else
-        echo "Warning: Could not determine active user session for notifications."
-    fi
-}
-
 sudo dmesg -c > /dev/null
+
 echo "Monitoring dmesg for fan mode changes. Will learn mapping once."
 
 stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode:' | while read -r line; do
@@ -151,12 +107,13 @@ stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode
         if [ "$map_count" -eq ${NUM_PROFILES} ]; then
             mapped_profile=$(get_mapped_profile "$dmesg_mode")
             if [ -n "$mapped_profile" ]; then
-                run_notify "$mapped_profile"
+                # Directly call python script - assumes this script runs as the target user
+                /usr/local/bin/asus_fan_notify.py "$mapped_profile" &>/dev/null &
             fi
         else
             mapped_profile=$(get_mapped_profile "$dmesg_mode")
             if [ -n "$mapped_profile" ]; then
-                 run_notify "$mapped_profile"
+                 /usr/local/bin/asus_fan_notify.py "$mapped_profile" &>/dev/null &
             else
                  echo "Learning profile mappings from dmesg mode: $dmesg_mode..."
                  sleep 3
@@ -182,7 +139,7 @@ stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode
                              echo "${i}=${profile_name}" >> "$MAP_FILE"
                          done
                          echo "All mappings learned and stored in $MAP_FILE."
-                         run_notify "$actual_profile"
+                         /usr/local/bin/asus_fan_notify.py "$actual_profile" &>/dev/null &
                      else
                           echo "Error: Could not find index for learned profile '$actual_profile'."
                      fi
@@ -229,7 +186,8 @@ EOF
 
     SUDOERS_FILE="/etc/sudoers.d/asus-fan-monitor"
     echo "# Allow running dmesg without password for ASUS power profile monitoring" > "$SUDOERS_FILE"
-    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
+    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg -c" >> "$SUDOERS_FILE"
+    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg -w" >> "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
 
     echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $TARGET_USER."
@@ -250,18 +208,12 @@ else
     echo "2. Create an autostart entry:"
     echo "   - Create the directory: mkdir -p ~/.config/autostart"
     echo "   - Create the file: ~/.config/autostart/asus-fan-monitor.desktop"
-    echo "   - Add the following content to the file:"
-    echo "     [Desktop Entry]"
-    echo "     Type=Application"
-    echo "     Name=ASUS Power Profile Monitor"
-    echo "     Comment=Monitor ASUS power profile changes via dmesg trigger (smart learning)"
-    echo "     Exec=/usr/local/bin/asus_fan_monitor.sh"
-    echo "     Terminal=false"
-    echo "     Hidden=false"
-    echo "     X-GNOME-Autostart-enabled=true"
+    echo "   - Add the content from the script above (search for '[Desktop Entry]')."
     echo "3. Allow running dmesg without a password:"
     echo "   - Run: sudo visudo -f /etc/sudoers.d/asus-fan-monitor"
-    echo "   - Add the line: your_username ALL=(ALL) NOPASSWD: /bin/dmesg"
+    echo "   - Add the lines:"
+    echo "     your_username ALL=(ALL) NOPASSWD: /bin/dmesg -c"
+    echo "     your_username ALL=(ALL) NOPASSWD: /bin/dmesg -w"
     echo "   - Save and exit the editor."
     echo "   - Ensure permissions: sudo chmod 440 /etc/sudoers.d/asus-fan-monitor"
     echo "Replace 'your_username' with your actual Linux username."
