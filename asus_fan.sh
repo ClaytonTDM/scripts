@@ -94,8 +94,12 @@ get_mapped_profile() {
     grep "^${mode}=" "$MAP_FILE" | cut -d'=' -f2
 }
 
-sudo dmesg -c > /dev/null
+run_notify() {
+    local profile_name="$1"
+    /usr/local/bin/asus_fan_notify.py "$profile_name" &>/dev/null &
+}
 
+sudo dmesg -c > /dev/null
 echo "Monitoring dmesg for fan mode changes. Will learn mapping once."
 
 stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode:' | while read -r line; do
@@ -107,13 +111,12 @@ stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode
         if [ "$map_count" -eq ${NUM_PROFILES} ]; then
             mapped_profile=$(get_mapped_profile "$dmesg_mode")
             if [ -n "$mapped_profile" ]; then
-                # Directly call python script - assumes this script runs as the target user
-                /usr/local/bin/asus_fan_notify.py "$mapped_profile" &>/dev/null &
+                run_notify "$mapped_profile"
             fi
         else
             mapped_profile=$(get_mapped_profile "$dmesg_mode")
             if [ -n "$mapped_profile" ]; then
-                 /usr/local/bin/asus_fan_notify.py "$mapped_profile" &>/dev/null &
+                 run_notify "$mapped_profile"
             else
                  echo "Learning profile mappings from dmesg mode: $dmesg_mode..."
                  sleep 3
@@ -139,7 +142,7 @@ stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode
                              echo "${i}=${profile_name}" >> "$MAP_FILE"
                          done
                          echo "All mappings learned and stored in $MAP_FILE."
-                         /usr/local/bin/asus_fan_notify.py "$actual_profile" &>/dev/null &
+                         run_notify "$actual_profile"
                      else
                           echo "Error: Could not find index for learned profile '$actual_profile'."
                      fi
@@ -167,9 +170,7 @@ fi
 
 if [ -n "$TARGET_USER" ]; then
     echo "Configuring for user: $TARGET_USER"
-
     chown $TARGET_USER:$TARGET_USER /usr/local/bin/asus_fan_notify.py
-
     AUTODIR="/home/$TARGET_USER/.config/autostart/"
     mkdir -p "$AUTODIR"
     cat > "$AUTODIR/asus-fan-monitor.desktop" << 'EOF'
@@ -183,39 +184,19 @@ Hidden=false
 X-GNOME-Autostart-enabled=true
 EOF
     chown -R $TARGET_USER:$TARGET_USER "$AUTODIR"
-
     SUDOERS_FILE="/etc/sudoers.d/asus-fan-monitor"
     echo "# Allow running dmesg without password for ASUS power profile monitoring" > "$SUDOERS_FILE"
-    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg -c" >> "$SUDOERS_FILE"
-    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg -w" >> "$SUDOERS_FILE"
+    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
-
     echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $TARGET_USER."
     echo "Mapping file stored at /tmp/asus_fan_profile_map.txt"
     echo "It relies on dmesg for triggering and learns the mapping once using powerprofilesctl."
     echo "It should start automatically on next login."
     echo "To start it now (if not already running), run: /usr/local/bin/asus_fan_monitor.sh"
     echo "(You might need to kill any existing instance first: pkill -f asus_fan_monitor.sh)"
-
 else
     echo "--------------------------------------------------------------------"
     echo "Error: Could not automatically determine the target user."
-    echo "Installation incomplete."
-    echo ""
-    echo "Please manually perform the following steps:"
-    echo "1. Ensure '/usr/local/bin/asus_fan_notify.py' is owned by your user."
-    echo "   (e.g., sudo chown your_username:your_username /usr/local/bin/asus_fan_notify.py)"
-    echo "2. Create an autostart entry:"
-    echo "   - Create the directory: mkdir -p ~/.config/autostart"
-    echo "   - Create the file: ~/.config/autostart/asus-fan-monitor.desktop"
-    echo "   - Add the content from the script above (search for '[Desktop Entry]')."
-    echo "3. Allow running dmesg without a password:"
-    echo "   - Run: sudo visudo -f /etc/sudoers.d/asus-fan-monitor"
-    echo "   - Add the lines:"
-    echo "     your_username ALL=(ALL) NOPASSWD: /bin/dmesg -c"
-    echo "     your_username ALL=(ALL) NOPASSWD: /bin/dmesg -w"
-    echo "   - Save and exit the editor."
-    echo "   - Ensure permissions: sudo chmod 440 /etc/sudoers.d/asus-fan-monitor"
-    echo "Replace 'your_username' with your actual Linux username."
+    echo "Installation incomplete. Please see previous instructions for manual setup."
     echo "--------------------------------------------------------------------"
 fi
