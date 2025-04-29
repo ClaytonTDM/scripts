@@ -10,6 +10,11 @@ if [ -f /usr/local/bin/asus_fan_monitor.sh ]; then
     echo "Removed /usr/local/bin/asus_fan_monitor.sh"
 fi
 
+if [ -f /tmp/asus_fan_profile_map.txt ]; then
+    rm -f /tmp/asus_fan_profile_map.txt
+    echo "Removed /tmp/asus_fan_profile_map.txt"
+fi
+
 if [ -f /home/$(logname)/.config/autostart/asus-fan-monitor.desktop ]; then
     rm -f /home/$(logname)/.config/autostart/asus-fan-monitor.desktop
     echo "Removed autostart entry"
