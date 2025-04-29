@@ -79,10 +79,6 @@ except KeyboardInterrupt:
 EOF
 
 chmod +x /usr/local/bin/asus_fan_notify.py
-if [ "$(id -u)" = "0" ] && [ -n "$(logname 2>/dev/null)" ]; then
-    chown $(logname):$(logname) /usr/local/bin/asus_fan_notify.py
-fi
-
 
 cat > /usr/local/bin/asus_fan_monitor.sh << 'EOF'
 #!/bin/bash
@@ -203,21 +199,23 @@ EOF
 
 chmod +x /usr/local/bin/asus_fan_monitor.sh
 
-ACTIVE_USER=""
-if [ -n "$(logname 2>/dev/null)" ]; then
-    ACTIVE_USER=$(logname)
-elif [ -n "$SUDO_USER" ]; then
-    ACTIVE_USER="$SUDO_USER"
+TARGET_USER=""
+if [ -n "$SUDO_USER" ]; then
+    TARGET_USER="$SUDO_USER"
+elif [ -n "$(logname 2>/dev/null)" ]; then
+    TARGET_USER=$(logname)
 else
-    # Attempt to find user from 'who' as a last resort for sudoers file
-    ACTIVE_USER=$(who | grep -E '\(:[0-9.]+\)' | head -n 1 | awk '{print $1}')
+    TARGET_USER=$(who | grep -E '\(:[0-9.]+\)' | head -n 1 | awk '{print $1}')
 fi
 
+if [ -n "$TARGET_USER" ]; then
+    echo "Configuring for user: $TARGET_USER"
 
-if [ -n "$ACTIVE_USER" ]; then
-    AUTODIR="/home/$ACTIVE_USER/.config/autostart/"
+    chown $TARGET_USER:$TARGET_USER /usr/local/bin/asus_fan_notify.py
+
+    AUTODIR="/home/$TARGET_USER/.config/autostart/"
     mkdir -p "$AUTODIR"
-    cat > "$AUTODIR/asus-fan-monitor.desktop" << EOF
+    cat > "$AUTODIR/asus-fan-monitor.desktop" << 'EOF'
 [Desktop Entry]
 Type=Application
 Name=ASUS Power Profile Monitor
@@ -227,21 +225,45 @@ Terminal=false
 Hidden=false
 X-GNOME-Autostart-enabled=true
 EOF
-    if [ "$(id -u)" = "0" ]; then
-        chown -R $ACTIVE_USER:$ACTIVE_USER "$AUTODIR"
-    fi
+    chown -R $TARGET_USER:$TARGET_USER "$AUTODIR"
 
     SUDOERS_FILE="/etc/sudoers.d/asus-fan-monitor"
     echo "# Allow running dmesg without password for ASUS power profile monitoring" > "$SUDOERS_FILE"
-    echo "$ACTIVE_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
+    echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
-    echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $ACTIVE_USER."
+
+    echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $TARGET_USER."
     echo "Mapping file stored at /tmp/asus_fan_profile_map.txt"
     echo "It relies on dmesg for triggering and learns the mapping once using powerprofilesctl."
     echo "It should start automatically on next login."
     echo "To start it now (if not already running), run: /usr/local/bin/asus_fan_monitor.sh"
     echo "(You might need to kill any existing instance first: pkill -f asus_fan_monitor.sh)"
-else
-    echo "Error: Could not determine user for Autostart and Sudoers configuration. Please configure manually."
-fi
 
+else
+    echo "--------------------------------------------------------------------"
+    echo "Error: Could not automatically determine the target user."
+    echo "Installation incomplete."
+    echo ""
+    echo "Please manually perform the following steps:"
+    echo "1. Ensure '/usr/local/bin/asus_fan_notify.py' is owned by your user."
+    echo "   (e.g., sudo chown your_username:your_username /usr/local/bin/asus_fan_notify.py)"
+    echo "2. Create an autostart entry:"
+    echo "   - Create the directory: mkdir -p ~/.config/autostart"
+    echo "   - Create the file: ~/.config/autostart/asus-fan-monitor.desktop"
+    echo "   - Add the following content to the file:"
+    echo "     [Desktop Entry]"
+    echo "     Type=Application"
+    echo "     Name=ASUS Power Profile Monitor"
+    echo "     Comment=Monitor ASUS power profile changes via dmesg trigger (smart learning)"
+    echo "     Exec=/usr/local/bin/asus_fan_monitor.sh"
+    echo "     Terminal=false"
+    echo "     Hidden=false"
+    echo "     X-GNOME-Autostart-enabled=true"
+    echo "3. Allow running dmesg without a password:"
+    echo "   - Run: sudo visudo -f /etc/sudoers.d/asus-fan-monitor"
+    echo "   - Add the line: your_username ALL=(ALL) NOPASSWD: /bin/dmesg"
+    echo "   - Save and exit the editor."
+    echo "   - Ensure permissions: sudo chmod 440 /etc/sudoers.d/asus-fan-monitor"
+    echo "Replace 'your_username' with your actual Linux username."
+    echo "--------------------------------------------------------------------"
+fi
