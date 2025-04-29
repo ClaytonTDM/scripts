@@ -13,8 +13,6 @@ ID_FILE = "/tmp/asus_fan_notification_id"
 Notify.init("ASUS Power Profile Monitor")
 
 def send_notification(profile_name):
-    """Sends a notification based on the provided power profile name."""
-
     if not profile_name or profile_name == "unknown":
         message = "Unknown/Learning..."
         icon = "dialog-question-symbolic"
@@ -28,9 +26,8 @@ def send_notification(profile_name):
         message = "Performance"
         icon = "power-profile-performance-symbolic"
     else:
-        # Handle unexpected profile names just in case
         message = f"Profile: {profile_name.capitalize()}"
-        icon = "dialog-question-symbolic" # Or a generic power icon
+        icon = "dialog-question-symbolic"
 
     notification = Notify.Notification.new("Power Profile", message, icon)
 
@@ -44,7 +41,7 @@ def send_notification(profile_name):
                         temp_notification.set_property("id", int(old_id))
                         temp_notification.close()
                     except Exception:
-                        pass # Ignore errors closing old notification
+                        pass
     except Exception:
         pass
 
@@ -56,7 +53,6 @@ def send_notification(profile_name):
         pass
 
 def save_notification_id(notification):
-    """Callback to save the notification ID after it's shown."""
     try:
         notification_id = notification.get_property("id")
         if notification_id > 0:
@@ -64,27 +60,26 @@ def save_notification_id(notification):
                 f.write(str(notification_id))
     except Exception:
         pass
-    return False # Run only once
+    return False
 
 if len(sys.argv) > 1:
     profile_arg = sys.argv[1]
 else:
-    profile_arg = "unknown" # Default if no arg provided
+    profile_arg = "unknown"
 
 loop = GLib.MainLoop()
 send_notification(profile_arg)
-# Quit the loop shortly after sending
 GLib.timeout_add(500, loop.quit)
 
 try:
     loop.run()
 except KeyboardInterrupt:
-    print("Script interrupted.")
+    pass
 
 EOF
 
 chmod +x /usr/local/bin/asus_fan_notify.py
-if [ "$(id -u)" = "0" ] && [ -n "$(logname)" ]; then
+if [ "$(id -u)" = "0" ] && [ -n "$(logname 2>/dev/null)" ]; then
     chown $(logname):$(logname) /usr/local/bin/asus_fan_notify.py
 fi
 
@@ -93,116 +88,160 @@ cat > /usr/local/bin/asus_fan_monitor.sh << 'EOF'
 #!/bin/bash
 
 MAP_FILE="/tmp/asus_fan_profile_map.txt"
-# Touch the file initially if it doesn't exist
 touch "$MAP_FILE"
+
+PROFILES=("power-saver" "balanced" "performance")
+NUM_PROFILES=${#PROFILES[@]}
 
 get_mapped_profile() {
     local mode="$1"
     grep "^${mode}=" "$MAP_FILE" | cut -d'=' -f2
 }
 
-update_map() {
-    local mode="$1"
-    local profile="$2"
-    # Create a temporary file
-    local temp_map=$(mktemp)
-    # Remove existing entry for this mode (if any)
-    grep -v "^${mode}=" "$MAP_FILE" > "$temp_map"
-    # Add the new mapping
-    echo "${mode}=${profile}" >> "$temp_map"
-    # Atomically replace the old map file
-    mv "$temp_map" "$MAP_FILE"
+get_user_session() {
+    local display_user=$(who | grep -E '\(:[0-9.]+\)' | head -n 1 | awk '{print $1}')
+    local session_pid=""
+    local dbus_address=""
+
+    if [ -z "$display_user" ]; then
+        local session_info=$(loginctl list-sessions --no-legend | grep ' active=yes.* type=\(x11\|wayland\)' | head -n 1)
+        if [ -n "$session_info" ]; then
+            local session_id=$(echo "$session_info" | awk '{print $1}')
+            display_user=$(echo "$session_info" | awk '{print $3}')
+            session_pid=$(loginctl show-session "$session_id" -p Leader | cut -d= -f2)
+        fi
+    fi
+
+    if [ -n "$display_user" ]; then
+        local user_id=$(id -u "$display_user")
+        if [ -z "$session_pid" ]; then
+             session_pid=$(pgrep -u "$user_id" -n "(gnome-session|plasma_session|xfce4-session|cinnamon-session|startlxqt|mate-session)")
+        fi
+
+        if [ -n "$session_pid" ]; then
+             dbus_address=$(grep -z DBUS_SESSION_BUS_ADDRESS "/proc/$session_pid/environ" 2>/dev/null | cut -d= -f2-)
+        fi
+
+        if [ -n "$dbus_address" ]; then
+             echo "$display_user $dbus_address"
+             return 0
+        fi
+    fi
+    echo ""
+    return 1
 }
 
 run_notify() {
     local profile_name="$1"
-    local current_user=$(logname)
-    if [ -n "$current_user" ]; then
-        local user_id=$(id -u $current_user)
-        # Attempt to find the DBUS session address for common desktop environments
-        local dbus_address=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u $user_id -n gnome-session || pgrep -u $user_id -n plasma_session || pgrep -u $user_id -n xfce4-session || pgrep -u $user_id -n cinnamon-session || echo 0)/environ | cut -d= -f2-)
+    local user_session_info=$(get_user_session)
 
-        if [ -n "$dbus_address" ]; then
-             sudo -u $current_user DBUS_SESSION_BUS_ADDRESS=$dbus_address /usr/local/bin/asus_fan_notify.py "$profile_name"
-        else
-             # Fallback if DBUS address not found
-             sudo -u $current_user /usr/local/bin/asus_fan_notify.py "$profile_name"
-        fi
+    if [ -n "$user_session_info" ]; then
+        read -r current_user dbus_address <<< "$user_session_info"
+        sudo -u "$current_user" DBUS_SESSION_BUS_ADDRESS="$dbus_address" /usr/local/bin/asus_fan_notify.py "$profile_name" &>/dev/null &
+    else
+        echo "Warning: Could not determine active user session for notifications."
     fi
 }
 
-
 sudo dmesg -c > /dev/null
-
-echo "Monitoring dmesg for fan mode changes. Learning mapping..."
+echo "Monitoring dmesg for fan mode changes. Will learn mapping once."
 
 stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode:' | while read -r line; do
     dmesg_mode=$(echo "$line" | grep -o "Set fan boost mode: [0-2]" | awk '{print $5}')
 
     if [[ "$dmesg_mode" =~ ^[0-2]$ ]]; then
-        mapped_profile=$(get_mapped_profile "$dmesg_mode")
+        map_count=$(grep -c '=' "$MAP_FILE")
 
-        if [ -n "$mapped_profile" ]; then
-            # echo "Mapping known: $dmesg_mode -> $mapped_profile. Notifying..." # Debug
-            run_notify "$mapped_profile"
+        if [ "$map_count" -eq ${NUM_PROFILES} ]; then
+            mapped_profile=$(get_mapped_profile "$dmesg_mode")
+            if [ -n "$mapped_profile" ]; then
+                run_notify "$mapped_profile"
+            fi
         else
-            echo "Learning mapping for dmesg mode: $dmesg_mode..." # Info
-            # Wait for the power profile change to likely complete
-            sleep 3
-            actual_profile=$(powerprofilesctl get)
-
-            if [ -n "$actual_profile" ] && [ "$actual_profile" != "unknown" ]; then
-                echo "Learned: dmesg mode $dmesg_mode corresponds to profile '$actual_profile'. Storing." # Info
-                update_map "$dmesg_mode" "$actual_profile"
-                run_notify "$actual_profile"
+            mapped_profile=$(get_mapped_profile "$dmesg_mode")
+            if [ -n "$mapped_profile" ]; then
+                 run_notify "$mapped_profile"
             else
-                echo "Warning: Could not determine actual power profile after delay. Cannot update map for mode $dmesg_mode." # Warn
-                # run_notify "unknown"
+                 echo "Learning profile mappings from dmesg mode: $dmesg_mode..."
+                 sleep 3
+                 actual_profile=$(powerprofilesctl get)
+
+                 if [ -n "$actual_profile" ] && [[ " ${PROFILES[@]} " =~ " ${actual_profile} " ]]; then
+                     echo "Learned: dmesg mode $dmesg_mode corresponds to profile '$actual_profile'."
+
+                     learned_profile_index=-1
+                     for i in "${!PROFILES[@]}"; do
+                        if [[ "${PROFILES[$i]}" = "$actual_profile" ]]; then
+                            learned_profile_index=$i
+                            break
+                        fi
+                     done
+
+                     if [ "$learned_profile_index" -ne -1 ]; then
+                         > "$MAP_FILE"
+                         for i in 0 1 2; do
+                             offset=$(( (i - dmesg_mode + NUM_PROFILES) % NUM_PROFILES ))
+                             profile_index=$(( (learned_profile_index + offset) % NUM_PROFILES ))
+                             profile_name=${PROFILES[$profile_index]}
+                             echo "${i}=${profile_name}" >> "$MAP_FILE"
+                         done
+                         echo "All mappings learned and stored in $MAP_FILE."
+                         run_notify "$actual_profile"
+                     else
+                          echo "Error: Could not find index for learned profile '$actual_profile'."
+                     fi
+                 else
+                     echo "Warning: Could not determine actual power profile after delay. Cannot learn mappings."
+                 fi
             fi
         fi
     else
-         echo "Warning: Could not extract valid mode number from dmesg line: $line" # Warn
+         echo "Warning: Could not extract valid mode number from dmesg line: $line"
     fi
 done
 EOF
 
 chmod +x /usr/local/bin/asus_fan_monitor.sh
 
+ACTIVE_USER=""
+if [ -n "$(logname 2>/dev/null)" ]; then
+    ACTIVE_USER=$(logname)
+elif [ -n "$SUDO_USER" ]; then
+    ACTIVE_USER="$SUDO_USER"
+else
+    # Attempt to find user from 'who' as a last resort for sudoers file
+    ACTIVE_USER=$(who | grep -E '\(:[0-9.]+\)' | head -n 1 | awk '{print $1}')
+fi
 
-CURRENT_USER=$(logname)
-if [ -n "$CURRENT_USER" ]; then
-    AUTODIR="/home/$CURRENT_USER/.config/autostart/"
+
+if [ -n "$ACTIVE_USER" ]; then
+    AUTODIR="/home/$ACTIVE_USER/.config/autostart/"
     mkdir -p "$AUTODIR"
     cat > "$AUTODIR/asus-fan-monitor.desktop" << EOF
 [Desktop Entry]
 Type=Application
 Name=ASUS Power Profile Monitor
-Comment=Monitor ASUS power profile changes via dmesg trigger (with learning)
+Comment=Monitor ASUS power profile changes via dmesg trigger (smart learning)
 Exec=/usr/local/bin/asus_fan_monitor.sh
 Terminal=false
 Hidden=false
 X-GNOME-Autostart-enabled=true
 EOF
     if [ "$(id -u)" = "0" ]; then
-        chown -R $CURRENT_USER:$CURRENT_USER "$AUTODIR"
+        chown -R $ACTIVE_USER:$ACTIVE_USER "$AUTODIR"
     fi
-else
-    echo "Warning: Could not determine logged in user ('logname'). Autostart entry not created/updated."
-fi
 
-
-if [ -n "$CURRENT_USER" ]; then
     SUDOERS_FILE="/etc/sudoers.d/asus-fan-monitor"
     echo "# Allow running dmesg without password for ASUS power profile monitoring" > "$SUDOERS_FILE"
-    echo "$CURRENT_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
+    echo "$ACTIVE_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
+    echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $ACTIVE_USER."
+    echo "Mapping file stored at /tmp/asus_fan_profile_map.txt"
+    echo "It relies on dmesg for triggering and learns the mapping once using powerprofilesctl."
+    echo "It should start automatically on next login."
+    echo "To start it now (if not already running), run: /usr/local/bin/asus_fan_monitor.sh"
+    echo "(You might need to kill any existing instance first: pkill -f asus_fan_monitor.sh)"
 else
-     echo "Warning: Could not determine logged in user ('logname'). Sudoers entry not created/updated."
+    echo "Error: Could not determine user for Autostart and Sudoers configuration. Please configure manually."
 fi
 
-echo "ASUS Power Profile Monitor (with learning) installed/updated."
-echo "Mapping file stored at /tmp/asus_fan_profile_map.txt"
-echo "It relies on dmesg for triggering and learns the mapping using powerprofilesctl."
-echo "It should start automatically on next login."
-echo "To start it now (if not already running), run: /usr/local/bin/asus_fan_monitor.sh"
-echo "(You might need to kill any existing instance first: pkill -f asus_fan_monitor.sh)"
