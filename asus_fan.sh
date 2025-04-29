@@ -9,7 +9,11 @@ import sys
 import os
 import time
 
-ID_FILE = "/tmp/asus_fan_notification_id"
+HOME_DIR = os.path.expanduser("~")
+CONFIG_DIR = os.path.join(HOME_DIR, ".config", "asus-fan-monitor")
+os.makedirs(CONFIG_DIR, exist_ok=True)
+ID_FILE = os.path.join(CONFIG_DIR, "notification_id")
+
 Notify.init("ASUS Power Profile Monitor")
 
 def send_notification(profile_name):
@@ -83,7 +87,9 @@ chmod +x /usr/local/bin/asus_fan_notify.py
 cat > /usr/local/bin/asus_fan_monitor.sh << 'EOF'
 #!/bin/bash
 
-MAP_FILE="/tmp/asus_fan_profile_map.txt"
+CONFIG_DIR="$HOME/.config/asus-fan-monitor"
+mkdir -p "$CONFIG_DIR"
+MAP_FILE="$CONFIG_DIR/profile_map.txt"
 touch "$MAP_FILE"
 
 PROFILES=("power-saver" "balanced" "performance")
@@ -101,6 +107,7 @@ run_notify() {
 
 sudo dmesg -c > /dev/null
 echo "Monitoring dmesg for fan mode changes. Will learn mapping once."
+echo "Map file stored at: $MAP_FILE"
 
 stdbuf -oL sudo dmesg -w | grep --line-buffered -E 'asus_wmi: Set fan boost mode:' | while read -r line; do
     dmesg_mode=$(echo "$line" | grep -o "Set fan boost mode: [0-2]" | awk '{print $5}')
@@ -171,6 +178,11 @@ fi
 if [ -n "$TARGET_USER" ]; then
     echo "Configuring for user: $TARGET_USER"
     chown $TARGET_USER:$TARGET_USER /usr/local/bin/asus_fan_notify.py
+    
+    CONFIG_DIR="/home/$TARGET_USER/.config/asus-fan-monitor"
+    mkdir -p "$CONFIG_DIR"
+    chown -R $TARGET_USER:$TARGET_USER "$CONFIG_DIR"
+    
     AUTODIR="/home/$TARGET_USER/.config/autostart/"
     mkdir -p "$AUTODIR"
     cat > "$AUTODIR/asus-fan-monitor.desktop" << 'EOF'
@@ -189,7 +201,7 @@ EOF
     echo "$TARGET_USER ALL=(ALL) NOPASSWD: /bin/dmesg" >> "$SUDOERS_FILE"
     chmod 440 "$SUDOERS_FILE"
     echo "ASUS Power Profile Monitor (smart learning) installed/updated for user $TARGET_USER."
-    echo "Mapping file stored at /tmp/asus_fan_profile_map.txt"
+    echo "Mapping file stored at $CONFIG_DIR/profile_map.txt"
     echo "It relies on dmesg for triggering and learns the mapping once using powerprofilesctl."
     echo "It should start automatically on next login."
     echo "To start it now (if not already running), run: /usr/local/bin/asus_fan_monitor.sh"
