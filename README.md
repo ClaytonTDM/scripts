@@ -30,7 +30,7 @@ Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
 
 ## line-count.sh
 
-Outputs the line count of all files in the current directory and all subdirectories, excluding `.git` and `node_modules`. Useful for GitHub Copilot.
+Outputs the line count of all files in the current directory and all subdirectories in an XML-like format, excluding `.git` and `node_modules`. Useful for GitHub Copilot.
 
 ```sh
 curl -s https://raw.githubusercontent.com/ClaytonTDM/scripts/refs/heads/main/line-count.sh | bash
