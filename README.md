@@ -28,7 +28,7 @@ curl https://raw.githubusercontent.com/ClaytonTDM/scripts/main/asus_fan_uninstal
 
 Last tested on Linux Mint 22.1 Cinnamon, LMDE 6 Faye
 
-## line-count.zsh
+## line-count.sh
 
 Outputs the line count of all files in the current directory and all subdirectories, excluding `.git` and `node_modules`. Useful for GitHub Copilot.
 
