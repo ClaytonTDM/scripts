@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 printf "<files>" && find . -path './.git' -prune -o -path './node_modules' -prune -o -type f -exec file --mime {} + | \
   grep 'text/' | cut -d: -f1 | while IFS= read -r file; do
   lines=$(wc -l < "$file")
