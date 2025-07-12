@@ -186,7 +186,7 @@ sudo dpkg -i "$GHOSTTY_DEB_FILE"
 rm "$GHOSTTY_DEB_FILE"
 sudo apt-get install --fix-broken -y
 # vesktop
-curl -L -o vesktop.deb "https://github.com/Vencord/Vesktop/releases/download/v1.5.6/vesktop_1.5.6_amd64.deb"
+curl -L -o vesktop.deb "https://github.com/Vencord/Vesktop/releases/download/v1.5.8/vesktop_1.5.8_amd64.deb"
 sudo apt-get install ./vesktop.deb -y
 rm vesktop.deb
 # zen browser
@@ -223,7 +223,9 @@ cd mint-y-icons/usr/share/folder-color-switcher/colors.d
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/refs/heads/main/assets/Mint-Y.json -o Mint-Y.json
 cd ~/Desktop/DEV/mint-y-icons/src/places
 curl https://raw.githubusercontent.com/ClaytonTDM/scripts/refs/heads/main/assets/generate-color-variations.py -o generate-color-variations.py
+chmod +x ./generate-color-variations.py
 ./generate-color-variations.py
+chmod +x ./render_places.py
 ./render_places.py Colloid-Pink
 cd ~/Desktop/DEV/mint-y-icons/usr
 sudo cp -rf ./share/* /usr/share/
@@ -239,13 +241,22 @@ sudo update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 gsettings set org.cinnamon.desktop.interface font-name 'Inter 10'
 gsettings set org.nemo.desktop font 'Inter 10'
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 10'
-gsettings set org.gnome.desktop.interface monospace-font-name 'Cascadia Mono 10'
+gsettings set org.gnome.desktop.interface monospace-font-name 'Cascadia Code NF 10'
 gsettings set org.cinnamon.desktop.wm.preferences titlebar-font 'Inter Medium 10'
 
 gsettings set org.cinnamon.desktop.interface gtk-theme 'Colloid-Pink-Dark'
 gsettings set org.cinnamon.desktop.interface icon-theme 'Mint-Y-Colloid-Pink'
-gsettings set org.cinnamon.desktop.interface cursor-theme 'Bibata-Modern-Classic'
+gsettings set org.cinnamon.desktop.interface cursor-theme 'Bibata-Original-Classic'
 gsettings set org.cinnamon.theme name 'Colloid-Pink-Dark'
+
+# Download latest binary
+wget https://github.com/ClaytonTDM/cinnamon-profile-manager/releases/download/v0.2.1/cinnamon-profile-manager-x86_64
+
+# Mark it as executable
+chmod +x cinnamon-profile-manager-x86_64
+
+# Move it into a directory in your PATH (optional)
+sudo mv cinnamon-profile-manager-x86_64 /usr/local/bin/cinnamon-profile-manager
 
 # restart cinnamon
 cinnamon -r >/dev/null 2>&1 &
@@ -306,6 +317,7 @@ yad --list \
 "Inkscape" \
 "OptiPNG" \
 "YAD" \
+"Cinnamon Profile Manager" \
 "Font - Inter" \
 "Font - Cascadia Code" \
 "GTK Theme - Colloid Pink Dark" \
