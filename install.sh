@@ -130,7 +130,8 @@ setopt interactive_comments
 setopt appendhistory
 source ~/.antidote/antidote.zsh
 antidote load
-eval "$(env _ZO_EXCLUDE_DIRS=/mnt/10ee8e41-7514-4146-b136-defaefd07de3 zoxide init zsh --cmd=cd)"' >~/.zshrc
+export _ZO_EXCLUDE_DIRS=/mnt/10ee8e41-7514-4146-b136-defaefd07de3
+eval "$(zoxide init zsh --cmd=cd)" | true' >~/.zshrc
 touch ~/.zsh_plugins.txt
 echo 'zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-autosuggestions' >~/.zsh_plugins.txt
